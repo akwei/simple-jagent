@@ -38,11 +38,15 @@
                     <relocations>
                         <relocation>
                             <pattern>org.springframework</pattern>
-                            <shadedPattern>com.github.akwei.simple.jagent.thirdlib.spring</shadedPattern>
+                            <shadedPattern>com.github.akwei.simple.jagent.thirdlib.org.springframework</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.google</pattern>
-                            <shadedPattern>com.github.akwei.simple.jagent.thirdlib.google</shadedPattern>
+                            <shadedPattern>com.github.akwei.simple.jagent.thirdlib.com.google</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.checkerframework</pattern>
+                            <shadedPattern>com.github.akwei.simple.jagent.thirdlib.org.checkerframework</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

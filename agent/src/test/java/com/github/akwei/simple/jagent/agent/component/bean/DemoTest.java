@@ -28,6 +28,7 @@ import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.pool.TypePool;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +84,9 @@ public class DemoTest extends BaseActionTest {
                 .loadClasses();
         UserBean o = (UserBean) classes.get(0).getConstructor().newInstance();
         o.say("akwei");
+
+        Field dynName = o.getClass().getDeclaredField("dynName");
+        System.out.println(dynName);
     }
 
 }
