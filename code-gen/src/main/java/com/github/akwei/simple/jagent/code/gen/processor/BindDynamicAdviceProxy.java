@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-package com.github.akwei.simple.jagent.plugins.demo.bean.component;
+package com.github.akwei.simple.jagent.code.gen.processor;
 
-import com.github.akwei.simple.jagent.core.annotation.BindActionModule;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-@BindActionModule
-public class BeanActionModule extends AbstractModule {
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-    @Provides
-    @Singleton
-    static BeanAction beanAction() {
-        return new BeanAction();
-    }
-
-    @Provides
-    @Singleton
-    static BeanDynamicAction beanDynamicAction() {
-        return new BeanDynamicAction();
-    }
-
+@Target({TYPE})
+@Retention(SOURCE)
+public @interface BindDynamicAdviceProxy {
 }

@@ -16,38 +16,38 @@
 
 package com.github.akwei.simple.jagent.plugins.demo.bean.component;
 
-import com.github.akwei.simple.jagent.core.ActionHolder;
 import com.github.akwei.simple.jagent.core.AgentAdvice;
 import com.github.akwei.simple.jagent.core.ContextInfo;
+import com.github.akwei.simple.jagent.core.DynamicActionHolder;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.implementation.bytecode.assign.Assigner;
 
 import java.util.Arrays;
 
-public class BeanAdvice implements AgentAdvice {
-
-    private static final String NAME = "com.github.akwei.simple.jagent.plugins.demo.bean.component.BeanAdvice";
+public class BeanDynamicAdviceProxy implements AgentAdvice {
 
     @Advice.OnMethodEnter
     public static ContextInfo onEnter(@Advice.This Object self,
                                       @Advice.Origin("#m") String method,
                                       @Advice.AllArguments(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object[] args) {
-        ContextInfo result = new ContextInfo();
+        ContextInfo contextInfo = new ContextInfo();
         Object[] objects = Arrays.copyOf(args, args.length);
-        ActionHolder.getAction(NAME).onEnter(self, method, objects, result.getContext());
+        DynamicActionHolder.getDynamicAction("com.github.akwei.simple.jagent.plugins.demo.bean.component.BeanDynamicAdviceProxy")
+                .onEnterDynamic(self, method, objects, contextInfo);
         args = objects;
-        return result;
+        return contextInfo;
     }
 
     @Advice.OnMethodExit(onThrowable = Throwable.class)
     public static void onExit(@Advice.Enter ContextInfo contextInfo,
-                              @Advice.This Object invoker,
+                              @Advice.This Object self,
                               @Advice.Origin("#m") String method,
                               @Advice.AllArguments(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object[] args,
                               @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object retValue,
                               @Advice.Thrown Throwable throwable) {
         Object[] objects = Arrays.copyOf(args, args.length);
-        retValue = ActionHolder.getAction(NAME).onExit(invoker, method, objects, retValue, throwable, contextInfo.getContext());
+        retValue = DynamicActionHolder.getDynamicAction("com.github.akwei.simple.jagent.plugins.demo.bean.component.BeanDynamicAdviceProxy")
+                .onExitDynamic(self, method, objects, retValue, throwable, contextInfo);
         args = objects;
     }
 

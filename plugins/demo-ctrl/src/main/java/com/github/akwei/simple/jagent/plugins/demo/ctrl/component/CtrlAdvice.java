@@ -18,7 +18,7 @@ package com.github.akwei.simple.jagent.plugins.demo.ctrl.component;
 
 import com.github.akwei.simple.jagent.core.ActionHolder;
 import com.github.akwei.simple.jagent.core.AgentAdvice;
-import com.github.akwei.simple.jagent.core.OnMethodEnterResult;
+import com.github.akwei.simple.jagent.core.ContextInfo;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.implementation.bytecode.assign.Assigner;
 
@@ -27,21 +27,21 @@ public class CtrlAdvice implements AgentAdvice {
     private static final String NAME = "com.github.akwei.simple.jagent.plugins.demo.ctrl.component.CtrlAdvice";
 
     @Advice.OnMethodEnter
-    public static OnMethodEnterResult onEnter(@Advice.This Object self,
-                                              @Advice.Origin("#m") String method,
-                                              @Advice.AllArguments Object[] args) {
-        OnMethodEnterResult result = new OnMethodEnterResult();
+    public static ContextInfo onEnter(@Advice.This Object self,
+                                      @Advice.Origin("#m") String method,
+                                      @Advice.AllArguments Object[] args) {
+        ContextInfo result = new ContextInfo();
         ActionHolder.getAction(NAME).onEnter(self, method, args, result.getContext());
         return result;
     }
 
     @Advice.OnMethodExit(onThrowable = Throwable.class)
-    public static void onExit(@Advice.Enter OnMethodEnterResult onMethodEnterResult,
+    public static void onExit(@Advice.Enter ContextInfo contextInfo,
                               @Advice.This Object invoker,
                               @Advice.Origin("#m") String method,
                               @Advice.AllArguments(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object[] args,
                               @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object retValue,
                               @Advice.Thrown Throwable throwable) {
-        retValue = ActionHolder.getAction(NAME).onExit(invoker, method, args, retValue, throwable, onMethodEnterResult.getContext());
+        retValue = ActionHolder.getAction(NAME).onExit(invoker, method, args, retValue, throwable, contextInfo.getContext());
     }
 }

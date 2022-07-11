@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package com.github.akwei.simple.jagent.plugins.demo.bean.component;
+package com.github.akwei.simple.jagent.core;
 
-import com.github.akwei.simple.jagent.core.annotation.BindActionModule;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
+import java.util.HashMap;
+import java.util.Map;
 
-@BindActionModule
-public class BeanActionModule extends AbstractModule {
+public class ContextInfo {
 
-    @Provides
-    @Singleton
-    static BeanAction beanAction() {
-        return new BeanAction();
-    }
+    private final Map<String, Object> context = new HashMap<>();
 
-    @Provides
-    @Singleton
-    static BeanDynamicAction beanDynamicAction() {
-        return new BeanDynamicAction();
+    public Map<String, Object> getContext() {
+        return context;
     }
 
 }

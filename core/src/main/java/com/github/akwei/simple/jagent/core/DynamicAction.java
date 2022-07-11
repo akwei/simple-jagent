@@ -16,15 +16,12 @@
 
 package com.github.akwei.simple.jagent.core;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface DynamicAction {
 
-public class OnMethodEnterResult {
+    Object getTarget();
 
-    private final Map<String, Object> context = new HashMap<>();
+    void onEnterDynamic(Object... args);
 
-    public Map<String, Object> getContext() {
-        return context;
-    }
+    Object onExitDynamic(Object... args);
 
 }

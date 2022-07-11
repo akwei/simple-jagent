@@ -26,7 +26,7 @@ import javax.lang.model.util.Types;
 import java.util.Set;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@SupportedAnnotationTypes({"com.github.akwei.simple.jagent.code.gen.processor.AdviceProxy"})
+@SupportedAnnotationTypes({"com.github.akwei.simple.jagent.code.gen.processor.BindDynamicAdviceProxy"})
 @AutoService(Processor.class)
 public class AdviceProcessor extends AbstractProcessor {
     private Types typeUtils;

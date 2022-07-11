@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.github.akwei.simple.jagent.code.gen.processor;
+package com.github.akwei.simple.jagent.core.annotation;
+
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE})
-@Retention(SOURCE)
-public @interface AdviceProxy {
+@Retention(RUNTIME)
+public @interface BindDynamicActionProxy {
 
+    Class<?> targetActionClass();
 }

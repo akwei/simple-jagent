@@ -18,6 +18,7 @@ package com.github.akwei.simple.jagent.core;
 
 import com.github.akwei.simple.jagent.core.annotation.BindActionModule;
 import com.github.akwei.simple.jagent.core.annotation.BindDefinitionModule;
+import com.github.akwei.simple.jagent.core.annotation.BindDynamicActionProxy;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -37,12 +38,13 @@ public class ObjectInitializer {
 
     public void init(String scanPackagePrefix) {
         Reflections reflections = new Reflections(scanPackagePrefix);
-        this.init(this.findActionModules(reflections), this.findDefinitionModules(reflections));
+        this.init(this.findActionModules(reflections), this.findDefinitionModules(reflections), this.findDynamicAction(reflections));
     }
 
-    public void init(List<Module> modules, List<DefinitionModule> definitionModules) {
+    public void init(List<Module> modules, List<DefinitionModule> definitionModules, List<DynamicAction> dynamicActions) {
         this.initInjector(modules);
         this.initDefinitionConfig(definitionModules);
+        this.initDynamicActionProxy(dynamicActions);
     }
 
     public List<TransformerDefinition> getTransformerDefinitions() {
@@ -55,8 +57,8 @@ public class ObjectInitializer {
         }
         for (TransformerDefinition transformerDefinition : transformerDefinitions) {
             for (MatcherDefinition matcherDefinition : transformerDefinition.matcherDefinitions()) {
-                Class<? extends Action> aClass = matcherDefinition.actionClass();
-                Action action = injector.getInstance(aClass);
+                Class<?> aClass = matcherDefinition.actionClass();
+                Action action = (Action) injector.getInstance(aClass);
                 ActionHolder.add(matcherDefinition.adviceName(), action);
             }
         }
@@ -85,9 +87,31 @@ public class ObjectInitializer {
         return modules;
     }
 
-    private <T> T newInstance(Class<T> aClass) {
+    private List<DynamicAction> findDynamicAction(Reflections reflections) {
+        Set<Class<?>> classesOfBindDynamicActionProxy = reflections.get(Scanners.TypesAnnotated.with(BindDynamicActionProxy.class).asClass());
+        List<DynamicAction> dynamicActions = new ArrayList<>();
+        for (Class<?> aClass : classesOfBindDynamicActionProxy) {
+            if (!aClass.getSuperclass().equals(DynamicAction.class)) {
+                throw new IllegalArgumentException(aClass.getName() + " must extends " + DynamicAction.class.getName());
+            }
+            BindDynamicActionProxy bindDynamicActionProxy = aClass.getAnnotation(BindDynamicActionProxy.class);
+            Object targetAction = injector.getInstance(bindDynamicActionProxy.targetActionClass());
+            DynamicAction dynamicAction = (DynamicAction) newInstance(aClass, targetAction);
+            dynamicActions.add(dynamicAction);
+        }
+        return dynamicActions;
+    }
+
+    private void initDynamicActionProxy(List<DynamicAction> dynamicActions) {
+        for (DynamicAction dynamicAction : dynamicActions) {
+            BindDynamicActionProxy bindDynamicActionProxy = dynamicActions.getClass().getAnnotation(BindDynamicActionProxy.class);
+            DynamicActionHolder.addOriginActionCls(bindDynamicActionProxy.targetActionClass(), dynamicAction.getClass());
+        }
+    }
+
+    private <T> T newInstance(Class<T> aClass, Object... initArgs) {
         try {
-            return aClass.getConstructor().newInstance();
+            return aClass.getConstructor().newInstance(initArgs);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

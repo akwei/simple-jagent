@@ -31,4 +31,6 @@ public @interface BindAdvice {
 
     Class<? extends AgentAdvice> adviceClass();
 
+    boolean reentrant() default false;
+
 }

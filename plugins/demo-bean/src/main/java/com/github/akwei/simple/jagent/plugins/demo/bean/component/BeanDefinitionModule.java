@@ -42,5 +42,16 @@ public class BeanDefinitionModule extends AbstractDefinitionModule {
 //                        .addTransformer((builder, typeDescription, classLoader, module) -> builder.defineField("dynName", Object.class, Visibility.PRIVATE)
 //                                .implement(AgentFieldAccessor.class).intercept(FieldAccessor.ofField("dynName")))
         );
+        transformerDefinitions.add(
+                new TransformerDefinition()
+                        .type(ElementMatchers.nameEndsWith("Bean"))
+                        .addMatcherDefinition(
+                                new MatcherDefinition()
+                                        .matcher(ElementMatchers.named("say"))
+                                        .actionClass(BeanDynamicAction.class)
+                        )
+                        .addDynamicFieldName("dynName")
+        );
+
     }
 }

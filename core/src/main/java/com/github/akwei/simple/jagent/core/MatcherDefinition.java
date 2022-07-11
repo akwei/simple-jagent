@@ -23,7 +23,7 @@ import net.bytebuddy.matcher.ElementMatcher;
 public class MatcherDefinition {
 
     private ElementMatcher<? super MethodDescription> matcher;
-    private Class<? extends Action> actionClass;
+    private Class<?> actionClass;
 
 
     public MatcherDefinition matcher(ElementMatcher<? super MethodDescription> matcher) {
@@ -35,11 +35,11 @@ public class MatcherDefinition {
         return matcher;
     }
 
-    public Class<? extends Action> actionClass() {
+    public Class<?> actionClass() {
         return actionClass;
     }
 
-    public MatcherDefinition actionClass(Class<? extends Action> actionClass) {
+    public MatcherDefinition actionClass(Class<?> actionClass) {
         this.actionClass = actionClass;
         return this;
     }
@@ -48,7 +48,14 @@ public class MatcherDefinition {
         if (this.actionClass == null) {
             throw new IllegalArgumentException("can not get adviceName from null actionClass");
         }
-        BindAdvice bindAdvice = this.actionClass.getAnnotation(BindAdvice.class);
+        if (Action.class.isAssignableFrom(this.actionClass)) {
+            BindAdvice bindAdvice = this.actionClass.getAnnotation(BindAdvice.class);
+            Class<? extends AgentAdvice> adviceClass = bindAdvice.adviceClass();
+            return adviceClass.getName();
+        }
+        // other all dynamic
+        Class<?> dynamicAdviceClass = DynamicActionHolder.getDynamicAdviceClass(this.actionClass);
+        BindAdvice bindAdvice = dynamicAdviceClass.getAnnotation(BindAdvice.class);
         Class<? extends AgentAdvice> adviceClass = bindAdvice.adviceClass();
         return adviceClass.getName();
     }
