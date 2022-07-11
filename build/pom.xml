@@ -11,27 +11,44 @@
 
     <artifactId>build</artifactId>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.github.akwei.simple-jagent</groupId>
             <artifactId>agent</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.akwei.simple-jagent</groupId>
             <artifactId>loader</artifactId>
-            <version>${project.version}</version>
+        </dependency>
+
+        <!--  module  -->
+        <dependency>
+            <groupId>com.github.akwei.simple-jagent</groupId>
+            <artifactId>demo-bean</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.akwei.simple-jagent</groupId>
+            <artifactId>demo-ctrl</artifactId>
         </dependency>
     </dependencies>
 
     <build>
         <finalName>simple-jagent</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <parameters>true</parameters>
+                    <compilerArgs>
+                        <arg>-verbose</arg>
+                        <arg>-Xlint:all,-options,-path</arg>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
             <!--        build jar with all dependencies    -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

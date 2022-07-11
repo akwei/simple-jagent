@@ -21,10 +21,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-loader</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
     </dependencies>
 
 
@@ -39,14 +35,6 @@
                         <relocation>
                             <pattern>org.springframework</pattern>
                             <shadedPattern>com.github.akwei.simple.jagent.thirdlib.org.springframework</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.google</pattern>
-                            <shadedPattern>com.github.akwei.simple.jagent.thirdlib.com.google</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.checkerframework</pattern>
-                            <shadedPattern>com.github.akwei.simple.jagent.thirdlib.org.checkerframework</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

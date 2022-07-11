@@ -1,6 +1,5 @@
 package com.github.akwei.simple.jagent.loader;
 
-import com.google.common.collect.Lists;
 import org.springframework.boot.loader.archive.Archive;
 import org.springframework.boot.loader.archive.JarFileArchive;
 
@@ -13,6 +12,8 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AgentLoader {
@@ -44,10 +45,12 @@ public class AgentLoader {
 //    }
 
     private static URL[] nestArchiveUrls(Archive archive) throws IOException {
-        ArrayList<Archive> archives = Lists.newArrayList(
-                archive.getNestedArchives(entry -> !entry.isDirectory() && entry.getName().startsWith(LIB),
-                        entry -> true
-                ));
+        Iterator<Archive> nestedArchives = archive.getNestedArchives(entry ->
+                !entry.isDirectory() && entry.getName().startsWith(LIB), entry -> true
+        );
+        List<Archive> archives = new ArrayList<>();
+        nestedArchives.forEachRemaining(archives::add);
+
         final URL[] urls = new URL[archives.size()];
 
         for (int i = 0; i < urls.length; i++) {

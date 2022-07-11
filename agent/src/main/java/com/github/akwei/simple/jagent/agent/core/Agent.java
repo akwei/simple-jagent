@@ -16,9 +16,12 @@
 
 package com.github.akwei.simple.jagent.agent.core;
 
+import com.github.akwei.simple.jagent.core.ObjectInitializer;
+import com.github.akwei.simple.jagent.core.TransformerDefinition;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.dynamic.ClassFileLocator;
 import net.bytebuddy.dynamic.loading.ClassInjector;
+import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
 
 import java.io.File;
@@ -28,9 +31,6 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
-
-import static net.bytebuddy.matcher.ElementMatchers.isSynthetic;
-import static net.bytebuddy.matcher.ElementMatchers.nameStartsWith;
 
 public class Agent {
 
@@ -54,37 +54,38 @@ public class Agent {
                 .with(AgentBuilder.InitializationStrategy.NoOp.INSTANCE)
                 .with(AgentBuilder.TypeStrategy.Default.REDEFINE)
                 .with(AgentBuilder.LocationStrategy.ForClassLoader.STRONG.withFallbackTo(ClassFileLocator.ForClassLoader.ofBootLoader()))
-                .ignore(isSynthetic())
-                .or(nameStartsWith("sun."))
-                .or(nameStartsWith("com.sun."))
-                .or(nameStartsWith("brave."))
-                .or(nameStartsWith("zipkin2."))
-                .or(nameStartsWith("com.fasterxml"))
-                .or(nameStartsWith("org.apache.logging"))
-                .or(nameStartsWith("kotlin."))
-                .or(nameStartsWith("javax."))
-                .or(nameStartsWith("net.bytebuddy."))
-                .or(nameStartsWith("com\\.sun\\.proxy\\.\\$Proxy.+"))
-                .or(nameStartsWith("java\\.lang\\.invoke\\.BoundMethodHandle\\$Species_L.+"))
-                .or(nameStartsWith("org.junit."))
-                .or(nameStartsWith("junit."))
-                .or(nameStartsWith("com.intellij."));
+                .ignore(ElementMatchers.isSynthetic())
+                .or(ElementMatchers.nameStartsWith("sun."))
+                .or(ElementMatchers.nameStartsWith("com.sun."))
+                .or(ElementMatchers.nameStartsWith("brave."))
+                .or(ElementMatchers.nameStartsWith("zipkin2."))
+                .or(ElementMatchers.nameStartsWith("com.fasterxml"))
+                .or(ElementMatchers.nameStartsWith("org.apache.logging"))
+                .or(ElementMatchers.nameStartsWith("kotlin."))
+                .or(ElementMatchers.nameStartsWith("javax."))
+                .or(ElementMatchers.nameStartsWith("net.bytebuddy."))
+                .or(ElementMatchers.nameStartsWith("com\\.sun\\.proxy\\.\\$Proxy.+"))
+                .or(ElementMatchers.nameStartsWith("java\\.lang\\.invoke\\.BoundMethodHandle\\$Species_L.+"))
+                .or(ElementMatchers.nameStartsWith("org.junit."))
+                .or(ElementMatchers.nameStartsWith("junit."))
+                .or(ElementMatchers.nameStartsWith("com.intellij."));
 
         ObjectInitializer objectInitializer = new ObjectInitializer();
-        objectInitializer.init("com.github.akwei.simple.jagent.agent.component");
+        objectInitializer.init("com.github.akwei.simple.jagent.plugins");
         agentBuilder = installTransformer(agentBuilder, objectInitializer);
         agentBuilder.installOn(instrumentation);
     }
 
     private static void loadFromBootstrapClassloader(Instrumentation instrumentation) throws Exception {
         injectToBootstrapClassLoader(instrumentation,
-                "com.github.akwei.simple.jagent.agent.core.ActionHolder");
+                "com.github.akwei.simple.jagent.core.ActionHolder");
         injectToBootstrapClassLoader(instrumentation,
-                "com.github.akwei.simple.jagent.agent.core.Action");
+                "com.github.akwei.simple.jagent.core.Action");
         injectToBootstrapClassLoader(instrumentation,
-                "com.github.akwei.simple.jagent.agent.core.AgentFieldAccessor");
-        injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.agent.core.AgentAdvice");
-        injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.agent.core.AgentFieldAccessor");
+                "com.github.akwei.simple.jagent.core.AgentFieldAccessor");
+        injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.core.AgentAdvice");
+        injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.core.AgentFieldAccessor");
+        injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.core.OnMethodEnterResult");
     }
 
     private static AgentBuilder installTransformer(AgentBuilder agentBuilder, ObjectInitializer objectInitializer) {
@@ -96,25 +97,6 @@ public class Agent {
             agentBuilder = type.transform((builder, typeDescription, classLoader, module) -> {
                 addUserClassLoader(agentClassLoader, classLoader);
                 builder = transformerDefinition.compoundTransformer().transform(builder, typeDescription, classLoader, module);
-
-
-//                for (MatcherDefinition matcherDefinition : transformerDefinition.matcherDefinitions()) {
-//                    builder = new AgentBuilder.Transformer.ForAdvice()
-//                            .include(agentClassLoader)
-//                            .advice(matcherDefinition.matcher(), matcherDefinition.adviceName())
-//                            .transform(builder, typeDescription, classLoader, module);
-//                }
-//
-//                for (AgentBuilder.Transformer transformer : transformerDefinition.transformers()) {
-//                    builder = transformer.transform(builder, typeDescription, classLoader, module);
-//                }
-//
-//                for (String dynamicFieldName : transformerDefinition.dynamicFieldNames()) {
-//                    builder = builder.defineField(dynamicFieldName, Object.class, Visibility.PRIVATE)
-//                            .implement(AgentFieldAccessor.class)
-//                            .intercept(FieldAccessor.ofField(dynamicFieldName));
-//                }
-
                 return builder;
             }).asTerminalTransformation();
         }

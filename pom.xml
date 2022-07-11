@@ -9,21 +9,28 @@
     <packaging>pom</packaging>
     <version>0.1.0-SNAPSHOT</version>
     <modules>
+        <module>core</module>
+        <module>code-gen</module>
+        <module>plugins</module>
         <module>agent</module>
-        <module>build</module>
         <module>loader</module>
+        <module>build</module>
     </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <version.maven-shade-plugin>3.3.0</version.maven-shade-plugin>
-        <version.maven-assembly-plugin>3.4.1</version.maven-assembly-plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <version.maven-shade-plugin>3.3.0</version.maven-shade-plugin>
+        <version.byte-byddy>1.12.12</version.byte-byddy>
     </properties>
     <dependencyManagement>
         <dependencies>
-
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>1.12.12</version>
+            </dependency>
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
@@ -56,6 +63,43 @@
                 <artifactId>guice</artifactId>
                 <version>5.1.0</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.auto.service</groupId>
+                <artifactId>auto-service</artifactId>
+                <version>1.0.1</version>
+            </dependency>
+
+            <!--  module  -->
+            <dependency>
+                <groupId>com.github.akwei.simple-jagent</groupId>
+                <artifactId>agent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.akwei.simple-jagent</groupId>
+                <artifactId>code-gen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.akwei.simple-jagent</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.akwei.simple-jagent</groupId>
+                <artifactId>demo-bean</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.akwei.simple-jagent</groupId>
+                <artifactId>demo-ctrl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.akwei.simple-jagent</groupId>
+                <artifactId>loader</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -78,9 +122,23 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>${version.maven-assembly-plugin}</version>
+                    <version>3.4.1</version>
                 </plugin>
-
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <parameters>true</parameters>
+                        <compilerArgs>
+                            <!--                            <arg>-verbose</arg>-->
+                            <arg>-Xlint:all,-options,-path</arg>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
 
                 <!--                <plugin>-->
                 <!--                    <groupId>org.apache.maven.plugins</groupId>-->
@@ -101,6 +159,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
+                <version>2.11.0</version>
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
