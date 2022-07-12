@@ -85,7 +85,9 @@ public class Agent {
                 "com.github.akwei.simple.jagent.core.AgentFieldAccessor");
         injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.core.AgentAdvice");
         injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.core.AgentFieldAccessor");
-        injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.core.OnMethodEnterResult");
+        injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.core.ContextInfo");
+        injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.core.DynamicAction");
+        injectToBootstrapClassLoader(instrumentation, "com.github.akwei.simple.jagent.core.DynamicActionHolder");
     }
 
     private static AgentBuilder installTransformer(AgentBuilder agentBuilder, ObjectInitializer objectInitializer) {

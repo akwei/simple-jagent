@@ -18,9 +18,6 @@
             <includes>
                 <include>com.github.akwei.simple-jagent:build</include>
             </includes>
-            <excludes>
-                <exclude>org.springframework.boot:spring-boot-loader</exclude>
-            </excludes>
         </dependencySet>
         <dependencySet>
             <outputDirectory/>

@@ -30,9 +30,9 @@ public class CtrlAdvice implements AgentAdvice {
     public static ContextInfo onEnter(@Advice.This Object self,
                                       @Advice.Origin("#m") String method,
                                       @Advice.AllArguments Object[] args) {
-        ContextInfo result = new ContextInfo();
-        ActionHolder.getAction(NAME).onEnter(self, method, args, result.getContext());
-        return result;
+        ContextInfo contextInfo = new ContextInfo();
+        ActionHolder.getAction(NAME).onEnter(self, method, args, contextInfo);
+        return contextInfo;
     }
 
     @Advice.OnMethodExit(onThrowable = Throwable.class)
@@ -42,6 +42,6 @@ public class CtrlAdvice implements AgentAdvice {
                               @Advice.AllArguments(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object[] args,
                               @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object retValue,
                               @Advice.Thrown Throwable throwable) {
-        retValue = ActionHolder.getAction(NAME).onExit(invoker, method, args, retValue, throwable, contextInfo.getContext());
+        retValue = ActionHolder.getAction(NAME).onExit(invoker, method, args, retValue, throwable, contextInfo);
     }
 }

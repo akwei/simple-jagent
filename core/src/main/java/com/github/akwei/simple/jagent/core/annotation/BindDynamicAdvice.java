@@ -19,10 +19,11 @@ package com.github.akwei.simple.jagent.core.annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 @Target({TYPE})
-@Retention(RUNTIME)
-public @interface BindAction {
+@Retention(SOURCE)
+public @interface BindDynamicAdvice {
+
 }

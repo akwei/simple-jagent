@@ -50,13 +50,16 @@ public class MatcherDefinition {
         }
         if (Action.class.isAssignableFrom(this.actionClass)) {
             BindAdvice bindAdvice = this.actionClass.getAnnotation(BindAdvice.class);
-            Class<? extends AgentAdvice> adviceClass = bindAdvice.adviceClass();
-            return adviceClass.getName();
+            if (bindAdvice != null) {
+                Class<? extends AgentAdvice> adviceClass = bindAdvice.adviceClass();
+                return adviceClass.getName();
+            }
+            return this.actionClass.getName() + "DynamicAdvice";
         }
         // other all dynamic
         Class<?> dynamicAdviceClass = DynamicActionHolder.getDynamicAdviceClass(this.actionClass);
         BindAdvice bindAdvice = dynamicAdviceClass.getAnnotation(BindAdvice.class);
         Class<? extends AgentAdvice> adviceClass = bindAdvice.adviceClass();
-        return adviceClass.getName();
+        return dynamicAdviceClass.getName();
     }
 }

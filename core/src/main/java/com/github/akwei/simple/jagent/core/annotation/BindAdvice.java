@@ -33,4 +33,6 @@ public @interface BindAdvice {
 
     boolean reentrant() default false;
 
+    boolean dynamic() default false;
+
 }

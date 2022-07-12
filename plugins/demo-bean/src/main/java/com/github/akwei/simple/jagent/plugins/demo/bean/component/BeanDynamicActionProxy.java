@@ -19,11 +19,7 @@ package com.github.akwei.simple.jagent.plugins.demo.bean.component;
 
 import com.github.akwei.simple.jagent.core.ContextInfo;
 import com.github.akwei.simple.jagent.core.DynamicAction;
-import com.github.akwei.simple.jagent.core.annotation.BindAdvice;
-import com.github.akwei.simple.jagent.core.annotation.BindDynamicActionProxy;
 
-@BindDynamicActionProxy(targetActionClass = BeanDynamicAction.class)
-@BindAdvice(adviceClass = BeanDynamicAdviceProxy.class)
 public class BeanDynamicActionProxy implements DynamicAction {
 
     private final BeanDynamicAction dynamicAction;
@@ -44,7 +40,7 @@ public class BeanDynamicActionProxy implements DynamicAction {
 
     @Override
     public Object onExitDynamic(Object... args) {
-        return this.dynamicAction.onExit((ContextInfo) args[0], args[1], (String) args[2], (Object[]) args[3], args[4], (Throwable) args[5]);
+        return this.dynamicAction.onExit(args[0], (String) args[1], (Object[]) args[2], args[3], (Throwable) args[4], (ContextInfo) args[5]);
     }
 
 }

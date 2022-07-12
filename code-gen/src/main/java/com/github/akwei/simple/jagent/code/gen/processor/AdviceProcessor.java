@@ -16,17 +16,20 @@
 
 package com.github.akwei.simple.jagent.code.gen.processor;
 
+import com.github.akwei.simple.jagent.core.annotation.BindDynamicAdvice;
 import com.google.auto.service.AutoService;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.util.Set;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@SupportedAnnotationTypes({"com.github.akwei.simple.jagent.code.gen.processor.BindDynamicAdviceProxy"})
+@SupportedAnnotationTypes({"com.github.akwei.simple.jagent.core.annotation.BindDynamicAdvice"})
 @AutoService(Processor.class)
 public class AdviceProcessor extends AbstractProcessor {
     private Types typeUtils;
@@ -48,9 +51,14 @@ public class AdviceProcessor extends AbstractProcessor {
         if (roundEnv.processingOver()) {
             return false;
         }
-        System.out.println("AdviceProcessor process");
-        for (TypeElement typeElement : annotations) {
-            System.out.println(typeElement);
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(BindDynamicAdvice.class);
+        for (Element element : elements) {
+            PackageElement packageOf = this.elementUtils.getPackageOf(element);
+            String packageName = packageOf.getQualifiedName().toString();
+            String actionFullClassName = ((TypeElement) element).getQualifiedName().toString();
+            String adviceClassName = element.getSimpleName().toString() + "DynamicAdvice";
+            AdviceGenerator.createAdviceCodeFile(packageName, adviceClassName, actionFullClassName, this.filer);
+            System.out.println("generate dynamic advice: [" + packageName + "." + adviceClassName + "]");
         }
         return false;
     }

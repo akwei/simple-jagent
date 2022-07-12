@@ -21,7 +21,7 @@ public class AgentLoader {
 
     public static void premain(String agentArgs, Instrumentation instrumentation) throws Exception {
         System.out.println("begin AgentLoader start");
-//        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(5);
         JarFileArchive archive = new JarFileArchive(getArchiveFileContains());
         URL[] urls = nestArchiveUrls(archive);
         ClassLoader agentClassLoader = new AgentClassLoader(urls);

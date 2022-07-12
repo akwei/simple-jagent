@@ -17,19 +17,21 @@
 package com.github.akwei.simple.jagent.plugins.demo.ctrl.component;
 
 import com.github.akwei.simple.jagent.core.Action;
+import com.github.akwei.simple.jagent.core.ContextInfo;
 import com.github.akwei.simple.jagent.core.annotation.BindAdvice;
 
 import java.util.Map;
 
 @BindAdvice(adviceClass = CtrlAdvice.class)
 public class CtrlAction implements Action {
+
     @Override
-    public void onEnter(Object self, String method, Object[] args, Map<String, Object> context) {
+    public void onEnter(Object self, String method, Object[] args, ContextInfo contextInfo) {
         System.out.println("CtrlAction args: " + args[0].getClass().getName());
     }
 
     @Override
-    public Object onExit(Object self, String method, Object[] args, Object retValue, Throwable throwable, Map<String, Object> context) {
+    public Object onExit(Object self, String method, Object[] args, Object retValue, Throwable throwable, ContextInfo contextInfo) {
         System.out.println("CtrlAction " + " " + method + " onExit");
         return retValue;
     }

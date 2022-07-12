@@ -26,28 +26,29 @@ import java.util.Arrays;
 
 public class BeanAdvice implements AgentAdvice {
 
-    private static final String NAME = "com.github.akwei.simple.jagent.plugins.demo.bean.component.BeanAdvice";
+    private static final String NAME = "com.github.akwei.simple.jagent.plugins.demo.bean.component.BeanAction";
 
     @Advice.OnMethodEnter
     public static ContextInfo onEnter(@Advice.This Object self,
                                       @Advice.Origin("#m") String method,
                                       @Advice.AllArguments(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object[] args) {
-        ContextInfo result = new ContextInfo();
+        ContextInfo contextInfo = new ContextInfo();
         Object[] objects = Arrays.copyOf(args, args.length);
-        ActionHolder.getAction(NAME).onEnter(self, method, objects, result.getContext());
+        ActionHolder.getAction(NAME).onEnter(self, method, objects, contextInfo);
         args = objects;
-        return result;
+        return contextInfo;
     }
 
     @Advice.OnMethodExit(onThrowable = Throwable.class)
-    public static void onExit(@Advice.Enter ContextInfo contextInfo,
-                              @Advice.This Object invoker,
+    public static void onExit(@Advice.This Object self,
                               @Advice.Origin("#m") String method,
                               @Advice.AllArguments(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object[] args,
                               @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object retValue,
-                              @Advice.Thrown Throwable throwable) {
+                              @Advice.Thrown Throwable throwable,
+                              @Advice.Enter ContextInfo contextInfo
+    ) {
         Object[] objects = Arrays.copyOf(args, args.length);
-        retValue = ActionHolder.getAction(NAME).onExit(invoker, method, objects, retValue, throwable, contextInfo.getContext());
+        retValue = ActionHolder.getAction(NAME).onExit(self, method, objects, retValue, throwable, contextInfo);
         args = objects;
     }
 

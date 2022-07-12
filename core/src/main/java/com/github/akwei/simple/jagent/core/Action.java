@@ -16,12 +16,11 @@
 
 package com.github.akwei.simple.jagent.core;
 
-import java.util.Map;
-
 public interface Action {
 
-    void onEnter(Object self, String method, Object[] args, Map<String, Object> context);
 
-    Object onExit(Object self, String method, Object[] args, Object retValue, Throwable throwable, Map<String, Object> context);
+    void onEnter(Object self, String method, Object[] args, ContextInfo contextInfo);
+
+    Object onExit(Object self, String method, Object[] args, Object retValue, Throwable throwable, ContextInfo contextInfo);
 
 }

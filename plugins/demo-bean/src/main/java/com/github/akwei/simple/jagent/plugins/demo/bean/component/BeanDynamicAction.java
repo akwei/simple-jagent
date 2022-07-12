@@ -17,16 +17,11 @@
 package com.github.akwei.simple.jagent.plugins.demo.bean.component;
 
 
-import com.github.akwei.simple.jagent.code.gen.processor.BindDynamicAdviceProxy;
 import com.github.akwei.simple.jagent.core.ContextInfo;
-import com.github.akwei.simple.jagent.core.annotation.BindAdvice;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.implementation.bytecode.assign.Assigner;
 import org.apache.commons.lang3.StringUtils;
 
-
-@BindDynamicAdviceProxy
-@BindAdvice(adviceClass = BeanDynamicAdviceProxy.class)
 public class BeanDynamicAction {
 
     @Advice.OnMethodEnter
@@ -42,12 +37,13 @@ public class BeanDynamicAction {
 
     @Advice.OnMethodExit(onThrowable = Throwable.class)
     public Object onExit(
-            @Advice.Enter ContextInfo contextInfo,
             @Advice.This Object invoker,
             @Advice.Origin("#m") String method,
             @Advice.AllArguments(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object[] args,
             @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object retValue,
-            @Advice.Thrown Throwable throwable) {
+            @Advice.Thrown Throwable throwable,
+            @Advice.Enter ContextInfo contextInfo
+    ) {
         System.out.println("BeanDynamicAction end ---------");
         return retValue + " - auto by byte-buddy";
     }

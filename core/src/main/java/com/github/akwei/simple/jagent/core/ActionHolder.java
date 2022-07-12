@@ -23,8 +23,8 @@ public class ActionHolder {
 
     private static final Map<String, Action> ACTION_MAP = new HashMap<>();
 
-    public static void add(String name, Action action) {
-        ACTION_MAP.put(name, action);
+    public static void add(Action action) {
+        ACTION_MAP.put(action.getClass().getName(), action);
     }
 
     public static Action getAction(String name) {

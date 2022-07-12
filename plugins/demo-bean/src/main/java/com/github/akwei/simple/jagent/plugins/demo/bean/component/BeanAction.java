@@ -18,23 +18,23 @@ package com.github.akwei.simple.jagent.plugins.demo.bean.component;
 
 
 import com.github.akwei.simple.jagent.core.Action;
-import com.github.akwei.simple.jagent.core.annotation.BindAdvice;
+import com.github.akwei.simple.jagent.core.ContextInfo;
+import com.github.akwei.simple.jagent.core.annotation.BindDynamicAdvice;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Map;
-
-@BindAdvice(adviceClass = BeanAdvice.class)
+@BindDynamicAdvice
+//@BindAdvice(adviceClass = BeanAdvice.class)
 public class BeanAction implements Action {
 
     @Override
-    public void onEnter(Object self, String method, Object[] args, Map<String, Object> context) {
+    public void onEnter(Object self, String method, Object[] args, ContextInfo contextInfo) {
         System.out.println("begin =======");
         String substring = StringUtils.substring("1234567890123", 0, 3);
         System.out.println(substring);
     }
 
     @Override
-    public Object onExit(Object invoker, String method, Object[] args, Object retValue, Throwable throwable, Map<String, Object> context) {
+    public Object onExit(Object self, String method, Object[] args, Object retValue, Throwable throwable, ContextInfo contextInfo) {
         System.out.println("end ---------");
         return retValue + " - auto by byte-buddy";
     }

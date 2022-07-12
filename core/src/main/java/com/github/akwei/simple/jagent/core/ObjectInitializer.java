@@ -59,7 +59,7 @@ public class ObjectInitializer {
             for (MatcherDefinition matcherDefinition : transformerDefinition.matcherDefinitions()) {
                 Class<?> aClass = matcherDefinition.actionClass();
                 Action action = (Action) injector.getInstance(aClass);
-                ActionHolder.add(matcherDefinition.adviceName(), action);
+                ActionHolder.add( action);
             }
         }
     }
