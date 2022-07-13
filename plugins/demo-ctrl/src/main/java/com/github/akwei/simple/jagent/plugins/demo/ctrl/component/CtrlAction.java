@@ -19,10 +19,12 @@ package com.github.akwei.simple.jagent.plugins.demo.ctrl.component;
 import com.github.akwei.simple.jagent.core.Action;
 import com.github.akwei.simple.jagent.core.ContextInfo;
 import com.github.akwei.simple.jagent.core.annotation.BindAdvice;
+import com.github.akwei.simple.jagent.core.annotation.BindDynamicAdvice;
 
 import java.util.Map;
 
-@BindAdvice(adviceClass = CtrlAdvice.class)
+@BindDynamicAdvice
+//@BindAdvice(adviceClass = CtrlAdvice.class)
 public class CtrlAction implements Action {
 
     @Override

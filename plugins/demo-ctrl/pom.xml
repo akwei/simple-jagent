@@ -36,6 +36,7 @@
         <dependency>
             <groupId>com.github.akwei.simple-jagent</groupId>
             <artifactId>code-gen</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
